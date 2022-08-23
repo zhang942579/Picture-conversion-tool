@@ -8,6 +8,10 @@ import pyperclip
 from .Ui_MainWindow import Ui_MainWindow
 
 
+"""
+程序主要逻辑与应用
+"""
+
 class app(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):

@@ -1,7 +1,9 @@
 from PyQt5 import QtWidgets
 import sys
-
 from Resource import app
+"""
+启动文件
+"""
 
 if __name__ == '__main__':
 

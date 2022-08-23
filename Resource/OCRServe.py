@@ -7,7 +7,10 @@ from huaweicloudsdkocr.v1 import *
 import base64
 from .Config import Config
 
+"""
+文字识别接口
 
+"""
 class OCRServe:
     def __init__(self):
         self.client = None
