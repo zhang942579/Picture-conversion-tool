@@ -6,6 +6,8 @@ from huaweicloudsdkocr.v1.region.ocr_region import OcrRegion
 from huaweicloudsdkocr.v1 import *
 import base64
 from .Config import Config
+import requests
+import easyocr
 
 """
 文字识别接口
@@ -19,13 +21,21 @@ class OCRServe:
         self.ak = self.config.ak
         self.sk = self.config.sk
 
-    def to_word(self, imagepath):
+    def to_word(self, imagepath, is_internet):
+
+        if(is_internet):
+            return self.have_internet(imagepath)
+        else:
+           return self.no_internet(imagepath)
+
+
+    def have_internet(self, imagepath):
         self.credentials = BasicCredentials(self.ak, self.sk)
         self.client = OcrClient.new_builder() \
             .with_credentials(self.credentials) \
             .with_region(OcrRegion.value_of("cn-north-4")) \
             .build()
-        image_data = self.open_img(imagepath)
+        image_data = self.open_imgBS(imagepath)
         image_base64 = base64.b64encode(image_data).decode("utf-8")
         try:
             request = RecognizeGeneralTextRequest()
@@ -33,13 +43,25 @@ class OCRServe:
                 image=image_base64
             )
             response = self.client.recognize_general_text(request)
-            return response
+            result = []
+            for i in response.result.words_block_list:
+                result.append(i.words)
+            return result
         except exceptions.ClientRequestException as e:
-
             msg_box = QMessageBox(QMessageBox.Critical, '错误', e)
             msg_box.exec_()
 
-    def open_img(self, imagepath):
+
+
+    def no_internet(self, imagepath):
+        reader = easyocr.Reader(['ch_sim', 'en'])  # this needs to run only once to load the model into memory
+        result = reader.readtext(imagepath, detail=0)
+        print(result)
+        return result
+
+
+    def open_imgBS(self, imagepath):
         with open(imagepath, "rb") as bin_data:
             image_data = bin_data.read()
         return image_data  # 使用图片的Base64编码
+

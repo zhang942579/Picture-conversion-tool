@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "图片转文字"))
         self.Image.setText(_translate("MainWindow", ""))
-        self.change.setText(_translate("MainWindow", "转换"))
+        self.change.setText(_translate("MainWindow", "转换模式"))
         self.add.setText(_translate("MainWindow", "添加"))
         self.delete.setText(_translate("MainWindow", "删除"))
         self.reduction.setText(_translate("MainWindow", "还原"))

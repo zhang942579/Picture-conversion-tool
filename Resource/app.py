@@ -15,6 +15,7 @@ from .Ui_MainWindow import Ui_MainWindow
 class app(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
+        self.is_internet = False
         super().__init__(parent)
         self.filename = None
         self.setupUi(self)
@@ -30,7 +31,12 @@ class app(QtWidgets.QMainWindow, Ui_MainWindow):
         self.copy.clicked.connect(self.clicked_copy)
 
     def clicked_change(self):
-        return
+        if(self.is_internet):
+            self.is_internet = False
+            self.show_Tips("已经切换为离线模式")
+        else:
+            self.is_internet = True
+            self.show_Tips("已经切换为联网模式")
 
     def clicked_add(self):
         filename = QFileDialog.getOpenFileNames(self, '选择图像', os.getcwd(), "All Files(*);;*.jpg;;*.png;;*.jpeg;;*.bmp")
@@ -40,15 +46,14 @@ class app(QtWidgets.QMainWindow, Ui_MainWindow):
             self.filename = filename[0][0]
             if imghdr.what(self.filename) is None:
                 self.show_Tips("请选择正确的文件(jpg、png···)")
-                print(imghdr.what(self.filename))
             else:
-                print('成功')
                 self.Image.setPixmap(QtGui.QPixmap(self.filename).scaled(self.Image.width(), self.Image.height()))
-                text = self.OcrServe.to_word(self.filename)
+
+                text = self.OcrServe.to_word(self.filename, self.is_internet)
                 if text is None:
                     return
-                for i in text.result.words_block_list:
-                    self.Text.append(i.words)
+                for i in text:
+                    self.Text.append(i)
 
     def clicked_delete(self):
         tips = self.show_Tips("确认清除照片吗？")
@@ -79,8 +84,7 @@ class app(QtWidgets.QMainWindow, Ui_MainWindow):
                 event.ignore()  # 忽略关闭事件
 
     def show_Tips(self, msg):
-        return QMessageBox.information(self, "提示", msg, QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.No)  # 最后的Yes表示弹框的按钮显示为Yes，默认按钮显示为OK,不填QMessageBox.Yes即为默认
+        return QMessageBox.information(self, "提示", msg, QMessageBox.Yes | QMessageBox.No)  # 最后的Yes表示弹框的按钮显示为Yes，默认按钮显示为OK,不填QMessageBox.Yes即为默认
 
     def show_error(self, msg):
         QMessageBox.critical(self, "错误", msg)
