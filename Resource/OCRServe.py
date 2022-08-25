@@ -6,13 +6,12 @@ from huaweicloudsdkocr.v1.region.ocr_region import OcrRegion
 from huaweicloudsdkocr.v1 import *
 import base64
 from .Config import Config
-import requests
 import easyocr
-
 """
 文字识别接口
-
 """
+
+
 class OCRServe:
     def __init__(self):
         self.client = None

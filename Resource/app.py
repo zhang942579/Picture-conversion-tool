@@ -1,21 +1,22 @@
 from .OCRServe import OCRServe
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 from PyQt5.QtGui import QPixmap
 import os
 import imghdr
 import pyperclip
 from .Ui_MainWindow import Ui_MainWindow
-
+from .MessageBox import MessageBox
 
 """
 程序主要逻辑与应用
 """
 
-class app(QtWidgets.QMainWindow, Ui_MainWindow):
+
+class app(MessageBox, Ui_MainWindow):
 
     def __init__(self, parent=None):
-        self.is_internet = False
+        self.is_internet = True
         super().__init__(parent)
         self.filename = None
         self.setupUi(self)
@@ -82,12 +83,3 @@ class app(QtWidgets.QMainWindow, Ui_MainWindow):
                 event.accept()  # 接受关闭事件
         else:
                 event.ignore()  # 忽略关闭事件
-
-    def show_Tips(self, msg):
-        return QMessageBox.information(self, "提示", msg, QMessageBox.Yes | QMessageBox.No)  # 最后的Yes表示弹框的按钮显示为Yes，默认按钮显示为OK,不填QMessageBox.Yes即为默认
-
-    def show_error(self, msg):
-        QMessageBox.critical(self, "错误", msg)
-
-    def show_warning(self, msg):
-        QMessageBox.warning(self, "警告", msg, QMessageBox.Cancel)
